@@ -1,0 +1,79 @@
+
+<style>
+    @media only screen and (max-width:749px){
+        .space-divider-{{ section.id }}{
+            padding-top: {{ section.settings.spacing_m }}px;
+        }
+    }
+    @media only screen and (min-width:750px){
+        .space-divider-{{ section.id }}{
+            padding-top: {{ section.settings.spacing_t }}px;
+        }
+    }
+    @media only screen and (min-width:1025px){
+        .space-divider-{{ section.id }}{
+            padding-top: {{ section.settings.spacing }}px;
+        }
+    }
+</style>
+<div class="space-divider-{{ section.id }}">
+</div>
+
+
+
+{% schema %}
+  {
+    "name": "Space",
+    "tag": "section",
+    "settings": [
+    {
+        "type": "header",
+        "content": "Desktop"
+    },
+    {
+        "type": "range",
+        "id": "spacing",
+        "label": "Section Spacing",
+        "unit": "px",
+        "min": 0, 
+        "max": 300,
+        "step": 5,
+        "default": 100
+    },
+    {
+        "type": "header",
+        "content": "Tab"
+    },
+    {
+        "type": "range",
+        "id": "spacing_t",
+        "label": "Section Spacing",
+        "unit": "px",
+        "min": 0,
+        "max": 300,
+        "step": 5,
+        "default": 100
+    },
+    {
+        "type": "header",
+        "content": "Mobile"
+    },
+    {
+        "type": "range",
+        "id": "spacing_m",
+        "label": "Section Spacing",
+        "unit": "px",
+        "min": 0,
+        "max": 300,
+        "step": 5,
+        "default": 100
+    }
+    ],
+    "presets": [
+        {
+        "name": "Space",
+        "category": "Helper"
+        }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,112 @@
+{% paginate search.results by 10 %}
+
+<div class="search-outer page-width page-with-header page mobile-h-padding">
+  {% if search.performed == false %}
+    <div class="text-center">
+      <h1 class="h2">{{ 'general.search.title' | t }}</h1>
+  {% else %}
+    <div class="text-center">
+      <h1 class="h2">
+        <span class="visually-hidden">{{ 'general.search.heading' | t: count: search.results_count }}:</span>
+        {{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}
+      </h1>
+  {% endif %}
+      <div class="grid">
+        <div class="grid__item medium-up--six-tenths medium-up--push-two-tenths">
+          {% if search.performed and search.results_count == 0 %}
+            <div class="rte search--no-results-found">
+              <p>{{ 'general.search.no_results' | t }}</p>
+            </div>
+          {% endif %}
+          <form action="{{ routes.search_url }}" method="get" role="search" class="search-form search-page-form">
+            <div class="input-group input-group--nowrap">
+              <div class="input-group__field input-group__field--connected search-form__input-wrapper">
+                <input
+                  type="search"
+                  name="q"
+                  value="{{ search.terms | escape }}"
+                  placeholder="{{ 'general.search.placeholder' | t }}"
+                  role="combobox"
+                  aria-autocomplete="list"
+                  aria-owns="predictive-search-results"
+                  aria-expanded="false"
+                  aria-label="{{ 'general.search.placeholder' | t }}"
+                  aria-haspopup="listbox"
+                  class="search-form__input"
+                  data-search-page-predictive-search-input
+                />
+
+                <input type="hidden" name="options[prefix]" value="last" aria-hidden="true" />
+
+                <button type="reset" class="search-form__clear-action" aria-label="{{ 'general.search.clear_search_term' | t }}" data-search-page-predictive-search-clear>
+                  {% include 'icon-close' %}
+                </button>
+
+                <div class="predictive-search-wrapper" data-predictive-search-mount="default"></div>
+              </div>
+
+              <button type="submit" class="search-form__connected-submit" aria-label="{{ 'general.search.submit' | t }}" data-search-page-predictive-search-submit>
+                {% include 'icon-search' %}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+  </div>
+    {% if search.performed %}
+    {% if search.results_count > 0 %}
+      <hr aria-hidden="true" />
+    {% endif %}
+
+    <h2 class="visually-hidden">{{ 'general.search.heading' | t: count: search.results_count }}</h2>
+
+    <div class="row search_section">
+      <div class="section-header col-xs-12">
+        <p class="subheading product-time">Products</p>
+        <h2>From our shop</h2>
+      </div>
+      {% for item in search.results %}
+        {% if item.object_type == 'product' %}
+        <div class="col-xs-6 col-md-4">
+              {% include 'product-card-grid', max_height: max_height, product: item, show_vendor: section.settings.show_vendor, container: 'product-category' %}
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="row search_section">
+      <div class="section-header col-xs-12">
+        <p class="subheading product-time">Pages</p>
+        <h2>Other Results</h2>
+      </div>
+      {% for item in search.results %}
+      {% if item.object_type != 'product' %}
+      <div class="col-xs-12 search-page-links">
+        <a href="{{ item.url }}">
+          <span class="visually-hidden">{{ item.title }}</span>
+          <div class="list-view-item__title" aria-hidden="true">
+            <h3 class="">{{ item.title }}</h3>
+          </div>
+          <div>
+            <p>{{ item.content | strip_html | truncate: 140 }}</p>
+          </div>
+        </a>
+      </div>
+      {% endif %}
+      {% endfor %}
+    </div>
+
+    {%- if paginate.pages > 1 -%}
+      {% include 'pagination', paginate: paginate %}
+    {%- endif -%}
+  {% endif %}
+
+  {% if search.results_count < 2  %}
+    <div class="search--less-than-2-results"></div>
+  {% endif %}
+
+  {% endpaginate %}
+</div>
+
+
+

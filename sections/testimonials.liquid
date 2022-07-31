@@ -1,0 +1,350 @@
+<div class="testimonial-slider-outer content-with-padding padding-small" style="background-color: {{ section.settings.color_bg }}" data-section-id="{{ section.id }}">
+{% if section.settings.title != blank %}
+<div class="col-xs-12 center-xs">
+  <div class="main-rating row center-xs middle-xs">
+    <div class="star-ratings-css">
+      <div class="star-ratings-css-top" style="width: {{ section.settings.star_rating | times: 10 | append: '%' }}"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+      <div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+    </div>
+    {% if section.settings.rating_text != blank %}
+    <span class="subheading">{{ section.settings.rating_text }}</span>
+    {% endif %}
+  </div>
+  {% render 'heading', head: section.settings.title %} 
+  {% if section.settings.btn_url != blank %}
+  <a class="row section-btn-secondary underline text-center" href="{{ section.settings.btn_url }}">{{ section.settings.btn_text }}{% include 'icon-right-filled' %}</a>
+  {% endif %}
+</div>
+{% endif %}  
+<div class="page-width">
+<div class="testimonial-slider overflow">
+  {% if section.blocks.size > 0 %}
+    <div class="swiper-wrapper quotes-wrapper">
+        {% for block in section.blocks %}
+          <div class="swiper-slide quotes-slide--{{ block.id }}" style="background-color: {{ block.settings.back }};" {{ block.shopify_attributes }} >
+            <div class="row">
+              <div>
+                <div class="quotes-slider__text text-center">
+                  {% if block.settings.author_img != blank %}
+                  {%- assign img_url = block.settings.author_img | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                  <div class="author-image lazy-container">
+                      <img
+                          class="lazyload lazy"  
+                          data-srcset="{{ img_url }}"
+                          data-aspectratio="{{ block.settings.author_img.aspect_ratio }}"
+                          data-sizes="auto"
+                          data-image
+                          data-parent-fit="cover"
+                          alt="{{ block.settings.author_img.alt | escape }}"
+                          width="{{ block.settings.author_img.width }}"
+                          height="{{ block.settings.author_img.height }}"
+                      />
+                  </div>
+                  {% endif %}
+                  {% if block.settings.quote != blank %}
+                    <h3 class="h3 rte-setting rte">{{ block.settings.quote }}</h2>
+                  {% endif %}
+                  <div class="star-ratings-css">
+                    <div class="star-ratings-css-top" style="width: {{ block.settings.star_rating | times: 10 | append: '%' }}"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                    <div class="star-ratings-css-bottom"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+                  </div>
+                  {% if block.settings.author != blank %}
+                    <h5 class="subheading">{{ block.settings.author | escape }}</h5>
+                    <h6 class="italics">{{ block.settings.member | escape }}</h6>
+                  {% endif %}
+                </div>
+                {% if block.settings.product != blank %}
+                  {% assign testimonialProduct = all_products[block.settings.product] %}
+                  <div class="product-testimonial row middle-xs between-xs">
+                    <div class="product-testimonial-info row middle-xs">
+                      <div class="lazy-container">
+                      {%- assign pro_img_url = testimonialProduct.featured_image | img_url: '80x' -%}
+                      <a href="{{ testimonialProduct.url }}" title="Link to {{ testimonialProduct.title }}">
+                        <img
+                            class="lazyload lazy"  
+                            data-src="{{ pro_img_url }}"
+                            data-aspectratio="{{ testimonialProduct.featured_image.aspect_ratio }}"
+                            data-sizes="auto"
+                            data-image
+                            data-parent-fit="cover"
+                            alt="{{ testimonialProduct.featured_image.alt | escape }}"
+                            width="{{ testimonialProduct.featured_image.width }}"
+                            height="{{ testimonialProduct.featured_image.height }}"
+                        />
+                      </a>
+                      </div>
+                      <h4><a href="{{ testimonialProduct.url }}" class="underline" title="Link to {{ testimonialProduct.title }}">{{ testimonialProduct.title }}</a></h4>
+                    </div>
+                    <div><a href="{{ testimonialProduct.url }}" title="Link to {{ testimonialProduct.title }}">{% include 'icon-arrow-right' %}</a></div>
+                  </div>
+                  {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+    </div>
+  {% endif %}
+ 
+  {% if section.blocks.size == 0 %}
+    {% render 'no-blocks' %}
+  {% endif %}
+  </div> 
+  <div class="slider-arrow">
+    <div class="swipe-btn swipe-btn-prev">{% include 'icon-left-filled' %}</div>
+    <div class="swipe-btn swipe-btn-next">{% include 'icon-right-filled' %}</div>
+  </div> 
+</div>
+</div>
+
+{% schema %}
+{
+  "name": "Testimonial",
+  "max_blocks": 9,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "color_bg",
+      "label": "Section Background Color",
+      "default": "#fff"
+    },
+    {
+      "type": "range",
+      "id": "star_rating",
+      "label": "Star Rating",
+      "unit": "Pts",
+      "min": 1,
+      "max": 10,
+      "step": 1, 
+      "default": 10
+    },
+    {
+      "type": "header",
+      "content": "Main Rating"
+    },
+    {
+      "type": "text",
+      "id": "rating_text",
+      "label": "Heading",
+      "default": "Heading Goes Here"
+    },
+    {
+      "type": "header",
+      "content": "Text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Heading",
+      "default": "Heading Goes Here"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "url",
+      "id": "btn_url",
+      "label": "Button Url"
+    },
+    {
+      "type": "text",
+      "id": "btn_text",
+      "label": "Button Text",
+      "default": "Read The Reviews",
+      "placeholder": "Button Label Text"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "quote",
+      "name": {
+        "da": "Udtalelse",
+        "de": "Testimonial",
+        "en": "Testimonial",
+        "es": "Testimonio",
+        "fi": "Suositukset",
+        "fr": "Témoignages",
+        "hi": "प्रमाणपत्र",
+        "it": "Testimonial",
+        "ja": "お客様の声",
+        "ko": "추천",
+        "nb": "Anbefaling",
+        "nl": "Testimonial",
+        "pt-BR": "Depoimento",
+        "pt-PT": "Testemunho",
+        "sv": "Kundberättelser",
+        "th": "เสียงชื่นชมจากลูกค้า",
+        "zh-CN": "感言",
+        "zh-TW": "推薦文"
+      },
+      "settings": [
+        {
+          "type": "color",
+          "id": "back",
+          "label": "Background Color",
+          "default": "#fff"
+        },
+        {
+          "type": "image_picker",
+          "id": "author_img",
+          "label": "Author Image"
+        },
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": {
+            "da": "Tekst",
+            "de": "Text",
+            "en": "Text",
+            "es": "Texto",
+            "fi": "Teksti",
+            "fr": "Texte",
+            "hi": "टेक्स्ट",
+            "it": "Testo",
+            "ja": "テキスト",
+            "ko": "텍스트",
+            "nb": "Tekst",
+            "nl": "Tekst",
+            "pt-BR": "Texto",
+            "pt-PT": "Texto",
+            "sv": "Text",
+            "th": "ข้อความ",
+            "zh-CN": "文本",
+            "zh-TW": "文字"
+          },
+          "default": {
+            "da": "Tilføj kundeanmeldelser og udtalelser for at fremhæve din butiks tilfredse kunder.",
+            "de": "Kunden-Reviews und Testimonials, die Kundenzufriedenheit beweisen.",
+            "en": "Add customer reviews and testimonials to showcase your store’s happy customers.",
+            "es": "Agrega las reseñas y los testimonios de los clientes para mostrar a los clientes satisfechos de tu tienda.",
+            "fi": "Lisää asiakasarviointeja ja suositteluja esimerkeiksi myymäläsi tyytyväisistä asiakkaista.",
+            "fr": "Ajoutez des avis et témoignages pour mettre en avant vos clients satisfaits.",
+            "hi": "अपने स्टोर के खुश ग्राहकों को दिखाने के लिए ग्राहक समीक्षा और प्रशंसापत्र जोड़ें.",
+            "it": "Aggiungi recensioni e testimonianze sul tuo negozio per dimostrare che i clienti sono soddisfatti.",
+            "ja": "あなたのストアの幸せなお客様を紹介するために、カスタマーレビューとお客様の声を追加してください。",
+            "ko": "고객 리뷰 및 추천을 추가하여 스토어에 만족한 고객을 보여주십시오.",
+            "nb": "Legg til kundeomtaler og anbefalinger for å vise frem butikkens glade kunder.",
+            "nl": "Voeg beoordelingen van klanten en testimonials toe om te laten zien dat uw klanten tevreden zijn.",
+            "pt-BR": "Adicione comentários e depoimentos para dar destaque aos clientes satisfeitos com a sua loja.",
+            "pt-PT": "Adicione análises e testemunhos para mostrar os clientes felizes da sua loja.",
+            "sv": "Lägg till kundrecensioner och berättelser för att visa upp din butiks nöjda kunder.",
+            "th": "เพิ่มรีวิวและเสียงชื่นชมจากลูกค้าเพื่อนำเสนอลูกค้าที่ได้รับความพึงพอใจจากร้านค้า",
+            "zh-CN": "添加客户评论和感言，以展示对您的商店满意的客户。",
+            "zh-TW": "新增顧客評論和推薦文，展示對您商店滿意之顧客。"
+          }
+        },
+        {
+          "type": "range",
+          "id": "star_rating",
+          "label": "Star Rating",
+          "unit": "Pts",
+          "min": 1,
+          "max": 10,
+          "step": 1, 
+          "default": 10
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": {
+            "da": "Forfatter",
+            "de": "Autor",
+            "en": "Author",
+            "es": "Autor",
+            "fi": "Kirjoittaja",
+            "fr": "Auteur",
+            "hi": "लेखक",
+            "it": "Autore",
+            "ja": "執筆者",
+            "ko": "작성자",
+            "nb": "Forfatter",
+            "nl": "Auteur",
+            "pt-BR": "Autoria",
+            "pt-PT": "Autoria",
+            "sv": "Upphovsman",
+            "th": "ผู้เขียน",
+            "zh-CN": "作者",
+            "zh-TW": "作者"
+          },
+          "default": {
+            "da": "Forfatterens navn",
+            "de": "Name des Autors",
+            "en": "Author's name",
+            "es": "Nombre del autor",
+            "fi": "Kirjoittajan nimi",
+            "fr": "Nom de l'auteur",
+            "hi": "लेखक का नाम",
+            "it": "Nome dell'autore",
+            "ja": "筆者の名前",
+            "ko": "작성자 이름",
+            "nb": "Forfatterens navn",
+            "nl": "Naam auteur",
+            "pt-BR": "Nome do autor",
+            "pt-PT": "Nome do autor",
+            "sv": "Författarens namn",
+            "th": "ชื่อผู้เขียน",
+            "zh-CN": "作者姓名",
+            "zh-TW": "作者名稱"
+          }
+        },
+        {
+          "type": "textarea",
+          "id": "member",
+          "label": "Member since",
+          "default": "Member since"
+        },
+        {
+          "type": "header",
+          "content": "Product",
+          "info": "Testimonial for Product"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+       }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": {
+        "da": "Udtalelser",
+        "de": "Testimonials",
+        "en": "Testimonials",
+        "es": "Testimonios",
+        "fi": "Suositukset",
+        "fr": "Témoignages",
+        "hi": "प्रमाणपत्र",
+        "it": "Testimonial",
+        "ja": "お客様の声",
+        "ko": "추천",
+        "nb": "Tilbakemeldinger fra kunder",
+        "nl": "Getuigenissen",
+        "pt-BR": "Depoimentos",
+        "pt-PT": "Depoimentos",
+        "sv": "Kundberättelser",
+        "th": "เสียงชื่นชมจากลูกค้า",
+        "zh-CN": "感言",
+        "zh-TW": "推薦文"
+      },
+      "category": "Promotional",
+      "blocks": [
+        {
+          "type": "quote"
+        },
+        {
+          "type": "quote"
+        },
+        {
+          "type": "quote"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

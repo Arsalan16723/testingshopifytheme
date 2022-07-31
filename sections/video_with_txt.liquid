@@ -1,0 +1,122 @@
+{% if section.settings.vide_controls_off %}
+{% assign controls = 1 %}
+{% else %}
+{% assign controls = 0 %}
+{% endif %}
+{% if section.settings.vide_controls_off %}
+{% assign autplay = 1 %}
+{% else %}
+{% assign autplay = 0 %}
+{% endif %}
+<section class="video_text" id="video_txt_{{section.id}}">
+  <div class="video_text_inner">
+    <div class="video_left">
+      {% if section.settings.use_img %}
+      <div class="img_video">
+        <img src="{{section.settings.image | img_url: '4000x' }}">
+      </div>
+      {% else %}
+      {% if section.settings.use_youtube %}
+      <div style="padding: 56.25% 0 0 0;position: relative;">
+        <iframe src="https://www.youtube.com/embed/{{-section.settings.yt_video-}}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="position:absolute;top:0;width:100%;height:100%;"></iframe>
+      </div>
+      {% else %}
+      <div style="padding: 56.25% 0 0 0;position: relative;">
+        <iframe src="https://player.vimeo.com/video/{{-section.settings.video-}}?autoplay={{-autplay-}}&amp;loop=1&amp;title=0&amp;byline=0&amp;portrait=0&amp;background={{-controls-}}" style="position:absolute;top:0;width:100%;height:100%;" frameborder="0" allow="autoplay; fullscreen" allowfullscreen="" data-ready="true"></iframe>
+      </div>
+      {% endif %}
+      {% endif %}
+    </div>
+    <div class="video_txt">
+      <h2>{{section.settings.title}}</h2>
+      <div class="video_content">
+        {{section.settings.text}}
+      </div>
+      {% if section.settings.link != blank %}
+      <div class="video_btn">
+        <a href="{{section.settings.link}}" class="Button Button--primary btn video-btn">{{section.settings.btn}}</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Video With Text",
+    "settings": [
+{
+"type": "checkbox",
+"id": "use_img",
+"label": "Use image instead of video",
+"default":false
+},
+{
+"type": "image_picker",
+"id": "image",
+"label": "Image if you don't want to use video"
+},
+		{
+		  "type": "text",
+		  "id": "title",
+		  "label": "Title",
+		  "default": "THE ULTIMATE COLLECTION"
+		},
+		{
+		  "type": "checkbox",
+		  "id": "vide_controls_off",
+		  "label": "Use Video as Background.",
+		  "default": false,
+          "info": "This will disable video controls and mute the video sound.Also the video will auto play."
+		},
+		{
+		  "type": "text",
+		  "id": "video",
+		  "label": "Vimeo Video Id",
+		  "default": "486122302"
+		},
+        {
+          "type": "checkbox",
+          "id": "use_youtube",
+          "label": "Use Youtube Video",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "yt_video",
+          "label": "Youtube Video Id. found at end of youtube url",
+          "default": "kjC87EnzRNA"
+        },
+		{
+		  "type": "text",
+		  "id": "btn",
+		  "label": "Button Label",
+		  "default": "See more"
+		},
+		{
+		  "type": "url",
+		  "id": "link",
+		  "label": "Button Link"
+		},
+		{
+		  "type": "richtext",
+		  "id": "text",
+		  "label": "Text Content",
+		  "default": "<p>An homage to the art of luxury bookmaking. Hand-bound using traditional techniques, with color plates hand-tipped on art-quality paper, each page of this limited-edition series bears the unique imprint of the artisan</p>"
+		}
+
+	],
+	"presets" :[
+        {
+          "name": "Video with Text",
+          "category": "Video"
+        }
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

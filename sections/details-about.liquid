@@ -1,0 +1,1387 @@
+<div class="page-with-header details">
+  {% if section.settings.banner != blank %}
+    <div class="collection-hero row">
+        <div class="collection-hero__image ratio-container lazyload js"
+             data-bgset="{% include 'bgset', image: section.settings.banner %}"
+             data-sizes="auto"
+             data-parent-fit="cover"
+             style="background-image: url('{{ section.settings.banner | img_url: '300x300' }});">
+             <div class="collection-hero__image_overlay" style="background-color: {{ section.settings.overlay }}; opacity: {{ section.settings.overlay_opacity | times: 0.01 }}"></div> 
+        </div>
+        <noscript>
+          <div class="collection-hero__image" style="background-image: url({{ section.settings.banner | img_url: '2048x600', crop: 'top' }});"></div>
+        </noscript>
+        <div class="hero-page page-width hero__inner row mobile-h-padding {{ section.settings.text_v_m }}-xs {{ section.settings.text_v }}-sm {% if section.settings.text_h_m == 'center' %}center-xs {% elsif section.settings.text_h_m == 'right' %}end-xs {% else %}start-xs {% endif %} {% if section.settings.text_h == 'center' %}center-sm {% elsif section.settings.text_h == 'right' %}end-sm{% else %}start-sm{% endif %}">
+          <div class="col-sm-5 col-xs-10">
+              <h1 class="hero-heading reveal-up-child">
+                <span class="visually-hidden">{{ 'collections.general.collection_label' | t }}: </span>
+                {{ page.title }}
+              </h1>
+              {% if page.content != blank %}
+                  <div class="rte-setting hero-caption reveal-up-child">{{ page.content }}</div>
+              {%- endif -%}
+          </div>
+        </div>
+    </div>    
+{% endif %}
+
+{%- for block in section.blocks -%}
+{%- case block.type -%}
+{%- when 'content' -%}
+{% if block.settings.radio_page == "boxed" %}
+<div class="page-width">
+{% endif %}
+<div id="content-inner-{{ block.id }}" 
+  class="content-inner row middle-md 
+  {% if block.settings.radio == "right" %} reverse {% endif %}" 
+  style="background-color: {{ block.settings.bg }}">
+    <div class="content-image-outer col-xs-12 col-sm-6  col-md-{{ block.settings.select_img }} lazy-container {% if block.settings.radio == "right" %}col-md-offset-1{% endif %}">
+        <div class="overflow">
+            <div class="image-reveal reveal-scale-child">
+                <div class="content-image-inner">
+                    {%- assign img_url = block.settings.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+                    <img id="content-image-{{ block.id }}"
+                        class="content-image lazyload lazy"
+                        data-src="{{ img_url }}"
+                        data-scroll-target="#content-inner-{{ block.id }}"
+                        data-widths="[180, 360, 540, 720, 900, 1080, 1296]"
+                        data-aspectratio="{{ block.settings.image.aspect_ratio }}"
+                        data-sizes="auto"
+                        data-image
+                        data-parent-fit="cover"
+                        data-scroll data-scroll-speed="-0.5"
+                        alt="{{ block.settings.image.alt | escape }}">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-text-outer col-xs-12 col-sm-6 col-md-{% if block.settings.select_text == "5" %}4{% elsif block.settings.select_text == "6" %}5{% else %}6{% endif %} {% if block.settings.radio == "left" %}col-md-offset-1{% endif %}">
+        <div class="content-text-inner lazy-container mobile-h-padding">
+                {% include 'heading', head: block.settings.heading, subhead: block.settings.subtitle %}
+                {% if block.settings.text %}{{ block.settings.text }}{% endif %}
+                {%- if block.settings.button_label != blank and block.settings.button_link != blank -%}
+                    {%- capture ariaLabel -%}
+                        {{- block.settings.button_label -}}
+                        {%- if block.settings.button_link.type == 'frontpage_link' -%}
+                            :
+                            {{ 'homepage.general.title' | t -}}
+                        {%- elsif block.settings.button_link.type == 'catalog_link' -%}
+                            :
+                            {{ 'collections.catalog.title' | t -}}
+                        {%- elsif block.settings.button_link.object.title -%}
+                            :
+                            {{ block.settings.button_link.object.title }}
+                        {%- endif -%}
+                    {%- endcapture -%}
+
+                    <a href="{{ block.settings.button_link }}" class="btn btn-full-small reveal-up-child" aria-label="{{ ariaLabel }}">
+                        {{ block.settings.button_label | escape }}
+                      <span class="btn_icon"> {% include 'btn_arrow' %}</span>
+                    </a>
+                {%- endif -%}
+        </div>
+    </div>
+</div>
+{% if block.settings.radio_page == "boxed" %}
+</div>
+{% endif %}
+{%- when 'divider' -%}
+    <style>
+      @media only screen and (max-width:749px){
+          .space-divider-{{ block.id }}{
+              padding-top: {{ block.settings.spacing_m }}px;
+          }
+      }
+      @media only screen and (min-width:750px){
+          .space-divider-{{ block.id }}{
+              padding-top: {{ block.settings.spacing_t }}px;
+          }
+      }
+      @media only screen and (min-width:1025px){
+          .space-divider-{{ block.id }}{
+              padding-top: {{ block.settings.spacing }}px;
+          }
+      }
+    </style>
+    <div class="space-divider-{{ block.id }}">
+    </div>
+{%- when 'brandinfo' -%}
+    <div class="brand-info content-with-padding {% if block.settings.padding == "medium" %}padding-small{% endif %}" style=" background-color: {{ block.settings.color_bg }};">
+      <div data-section-id="{{ block.id }}" data-section-type="Info-section" class="info-container">
+          <div class="info-section-outer row text-{{ block.settings.text_algin }} mobile-h-padding" >
+              {%- assign img_url2 = block.settings.image2 | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+              <div class="col-md-offset-3 col-md-6 col-xs-12 info-text-outer">
+                  {%- if block.settings.subtitle != blank -%}
+                      <h4 class="h4 subheading reveal-up-child" style="color: {{ block.settings.color_sub }};">{{ block.settings.subtitle | escape }}</h4>
+                  {%- endif -%}
+                  {%- if block.settings.title != blank -%}
+                      <h2 class="reveal-up-child" style="color: {{ block.settings.color_title }};">{{ block.settings.title }}</h2>
+                  {%- endif -%}
+              </div>
+          </div>
+          {%- if block.settings.image_bg != blank -%}
+            <div class="info-section-backdrop lazyload" {%- if block.settings.image_bg -%} {% unless block.settings.image_bg.alt == blank %} role="img" aria-label="{{ block.settings.image_bg.alt | escape }}" data-alt="{{ block.settings.image_bg.alt | escape }}" {% endunless %} data-bg="{{ block.settings.image_bg | img_url: '1500x' }}" data-bgset="{% include 'bgset', image: block.settings.image_bg %}" data-sizes="auto" data-parent-fit="cover" style="background-position: {{ block.settings.h_alignment_mob }} {{ block.settings.v_alignment_mob }}; background-size: cover;  background-image: url({{ block.settings.image_bg | img_url: '1500x' }});" {%- endif -%}>
+            </div>
+            <noscript>
+                  <div class="info-section-backdrop" {% if block.settings.image_bg %} {% unless block.settings.image_bg.alt == blank %} role="img" aria-label="{{ block.settings.image_bg.alt | escape }}" {% endunless %} style="background-image: url('{{ block.settings.image_bg | img_url: '1500x' }}'); background-position: {{ block.settings.h_alignment_mob }} {{ block.settings.v_alignment_mob }};" {% endif %}></div>
+            </noscript>
+          {%- endif -%}
+      </div>
+    </div>
+{%- when 'instagram' -%}
+      <div class="row instagram-outer mobile-h-padding">
+        <div class="section-header text-center page-width">
+            <p class="subheading product-time">{{ block.settings.subheading | escape }}</p>
+            <h2><a href="{{ block.settings.insta_link }}">{{ block.settings.heading | escape }}</a></h2>
+        </div>
+        <div class="instagram-feed page-width row" handle="{{ block.settings.handle_insta }}"></div>
+      </div>
+{%- when 'testimonial' -%}
+      <div class="content-with-padding" style="background-color: {{ block.settings.back }};">
+        <div class="row" >
+          <div class="col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2 col-xs-10 col-xs-offset-1">
+            <blockquote class="quotes-slider__text text-center">
+              <span class="quote-icon">{% include 'icon-quote' %}</span>
+              {% if block.settings.quote != blank %}
+                <h2 class="h2 rte-setting rte">{{ block.settings.quote }}</h2>
+              {% endif %}
+              {% if block.settings.author != blank %}
+                <h5 class="subheading">{{ block.settings.author | escape }}</h5>
+                <h6 class="italics">{{ block.settings.member | escape }}</h6>
+              {% endif %}
+            </blockquote>
+          </div>
+      </div>
+      </div>
+{%- when 'image_with_text' -%}
+      {%- if block.settings.image.aspect_ratio == blank -%}
+          {%- assign min_aspect_ratio = 2.0 -%}
+      {%- else -%}
+          {%- assign min_aspect_ratio = block.settings.image.aspect_ratio -%}
+      {%- endif -%}
+      <div data-section-id="{{ block.id }}" id="hero-section-{{ block.id }}" data-section-type="hero-section">
+          <div class="hero-outer hero-outer-{{ block.id }} overflow" data-scroll>
+            <div class="hero-page page-width hero__inner row mobile-h-padding {{ block.settings.text_v_m }}-xs {{ block.settings.text_v }}-sm {% if block.settings.text_h_m == 'center' %}center-xs {% elsif block.settings.text_h_m == 'right' %}end-xs {% else %}start-xs {% endif %} {% if block.settings.text_h == 'center' %}center-sm {% elsif block.settings.text_h == 'right' %}end-sm{% else %}start-sm{% endif %}">
+                  <div class="col-xs-12 col-sm-5 col-md-5 col-lg-4">
+                      {%- if block.settings.subtitle != blank -%}
+                          <h4 class="h4 subheading reveal-up-child">{{ block.settings.subtitle | escape }}</h4>
+                      {%- endif -%}
+                      {%- if block.settings.title != blank -%}
+                          <h2 class="h1 hero-heading reveal-up-child">{{ block.settings.title | escape }}</h2>
+                      {%- endif -%}
+                      {%- if block.settings.text != blank -%}
+                          <div class="rte-setting hero-caption reveal-up-child">{{ block.settings.text }}</div>
+                      {%- endif -%}
+                      {%- if block.settings.button_label != blank and block.settings.button_link != blank -%}
+                          {%- capture ariaLabel -%}
+                              {{- block.settings.button_label -}}
+                              {%- if block.settings.button_link.type == 'frontpage_link' -%}
+                                  :
+                                  {{ 'homepage.general.title' | t -}}
+                              {%- elsif block.settings.button_link.type == 'catalog_link' -%}
+                                  :
+                                  {{ 'collections.catalog.title' | t -}}
+                              {%- elsif block.settings.button_link.object.title -%}
+                                  :
+                                  {{ block.settings.button_link.object.title }}
+                              {%- endif -%}
+                          {%- endcapture -%}
+
+                          <a href="{{ block.settings.button_link }}" class="btn hero__btn reveal-up-child" aria-label="{{ ariaLabel }}">
+                              {{ block.settings.button_label | escape }}
+                            <span class="btn_icon"> {% include 'btn_arrow' %}</span>
+                          </a>
+                      {%- endif -%}
+                  </div>
+              </div>
+              <div class="hero-image overflow reveal-scale-child">
+                  <div class="hero hero-desktop hero-{{ block.id }}{% if block.settings.title != blank or block.settings.text != blank or block.settings.button_label != blank %} hero__overlay{% endif %} box ratio-container lazyload js" id="Hero-{{ block.id }}" data-scroll data-scroll-speed="-1.2" data-scroll-target="#hero-section-{{ block.id }}" data-layout="{{ block.settings.hero_layout }}" {%- if block.settings.image -%} {% unless block.settings.image.alt == blank %} role="img" aria-label="{{ block.settings.image.alt | escape }}" data-alt="{{ block.settings.image.alt | escape }}" {% endunless %} data-bg="{{ block.settings.image | img_url: '1500x' }}" data-bgset="{% include 'bgset', image: block.settings.image %}" data-sizes="auto" data-parent-fit="cover" style="background-position: {{ block.settings.h_alignment }} {{ block.settings.v_alignment }}; background-size: cover;  background-image: url({{ block.settings.image | img_url: '1500x' }});" {%- endif -%}>
+                      {%- if block.settings.image == blank -%}
+                          <div class="placeholder-background">
+                              {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                          </div>
+                      {%- endif -%}
+                  </div>
+
+                  <noscript>
+                      <div class="hero hero-desktop {% if block.settings.title != blank or block.settings.text != blank or block.settings.button_label != blank %} hero__overlay{% endif %}" {% if block.settings.image %} {% unless block.settings.image.alt == blank %} role="img" aria-label="{{ block.settings.image.alt | escape }}" {% endunless %} style="background-image: url('{{ block.settings.image | img_url: '1500x' }}'); background-position: {{ block.settings.h_alignment }} {{ block.settings.v_alignment }};" {% endif %}></div>
+                  </noscript>
+
+                  <div class="hero hero-mobile hero-{{ block.id }}{% if block.settings.title != blank or block.settings.text != blank or block.settings.button_label != blank %} hero__overlay{% endif %} box ratio-container lazyload js" id="Hero-{{ block.id }}"  {%- if block.settings.image_mob -%} {% unless block.settings.image_mob.alt == blank %} role="img" aria-label="{{ block.settings.image_mob.alt | escape }}" data-alt="{{ block.settings.image_mob.alt | escape }}" {% endunless %} data-bg="{{ block.settings.image_mob | img_url: '1500x' }}" data-bgset="{% include 'bgset', image: block.settings.image_mob %}" data-sizes="auto" data-parent-fit="cover" style="background-position: {{ block.settings.h_alignment_mob }} {{ block.settings.v_alignment_mob }}; background-size: cover;  background-image: url({{ block.settings.image_mob | img_url: '1500x' }});" {%- endif -%}>
+                    {%- if block.settings.image == blank -%}
+                        <div class="placeholder-background">
+                            {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+                        </div>
+                    {%- endif -%}
+                  </div>
+
+                  <noscript>
+                      <div class="hero hero-mobile {% if block.settings.title != blank or block.settings.text != blank or block.settings.button_label != blank %} hero__overlay{% endif %}" {% if block.settings.image_mob %} {% unless block.settings.image_mob.alt == blank %} role="img" aria-label="{{ block.settings.image_mob.alt | escape }}" {% endunless %} style="background-image: url('{{ block.settings.image_mob | img_url: '1500x' }}'); background-position: {{ block.settings.h_alignment_mob }} {{ block.settings.v_alignment_mob }};" {% endif %}></div>
+                  </noscript>
+
+              </div>
+          </div>
+      </div>
+{%- when 'newsletter' -%}
+      <style>
+        .newsletter_email_input-{{block.id}}{
+          background-color: transparent;
+          border-bottom: 1px solid {{ block.settings.input_color }};
+          color: {{ block.settings.input_color }};
+          padding-left: 0;
+          padding-right: 100px;
+        }
+
+        .newsletter_email_input-{{block.id}}:focus {
+          border-color: {{ block.settings.input_color }};
+        }
+
+        .newsletter-section-{{block.id}} .btn {
+          color: {{ block.settings.input_color }};
+        }
+
+        .newsletter-section-{{block.id}} .btn:hover, 
+        .newsletter-section-{{block.id}} .btn:active, 
+        .newsletter-section-{{block.id}} .btn:focus,
+        .newsletter-section-{{block.id}} .btn:visited {
+          color: {{ block.settings.input_color }};
+        }
+
+        .newsletter_email_input-{{block.id}}::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+          color:{{ block.settings.input_color }};
+        }
+        .newsletter_email_input-{{block.id}}::-moz-placeholder { /* Firefox 19+ */
+          color:{{ block.settings.input_color }};
+        }
+        .newsletter_email_input-{{block.id}}:-ms-input-placeholder { /* IE 10+ */
+          color:{{ block.settings.input_color }};
+        }
+        .newsletter_email_input-{{block.id}}:-moz-placeholder { /* Firefox 18- */
+          color:{{ block.settings.input_color }};
+        }
+      </style>
+
+      <div class="newsletter-section newsletter-section-{{block.id}}" style="background-color: {{ block.settings.bg_color }};">
+        <div class="page-width mobile-h-padding content-with-padding">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="section-header text-center">
+                {% if block.settings.section_title != blank %}
+                <h2 class="h2" style="color: {{ block.settings.title_color }};">{{ block.settings.section_title | escape }}</h2>
+                {% endif %}
+                {% if block.settings.subheading != blank %}
+                  <p class="rte" style="color: {{ block.settings.subheading_color }};">{{ block.settings.subheading }}</p>
+                {% endif %}
+              </div>
+              {%- assign formId = 'Contact_' | append: block.id -%}
+              {% form 'customer', id: formId, novalidate: 'novalidate', class: 'contact-form form-single-field' %}
+                {%- if form.posted_successfully? -%}
+                  <p class="form-message form-message--success" tabindex="-1" data-form-status>
+                    {{ 'general.newsletter_form.confirmation' | t }}
+                  </p>
+                {%- endif -%}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                <div class="input-group {% if form.errors %} input-group--error{% endif %}">
+                  <input type="email"
+                    name="contact[email]"
+                    id="{{ formId }}-email"
+                    class="input-group__field{% if form.errors %} input--error{% endif %} newsletter_email_input-{{block.id}}"
+                    value="{{ form.email }}"
+                    placeholder="{{ 'general.newsletter_form.email_placeholder' | t }}"
+                    aria-label="{{ 'general.newsletter_form.email_placeholder' | t }}"
+                    aria-required="true"
+                    autocorrect="off"
+                    autocapitalize="off"
+                    {% if form.errors %}
+                      aria-invalid="true"
+                      aria-describedby="{{ formId }}-email-error"
+                      data-form-status
+                    {% endif %}
+                    >
+                  <span class="input-group__btn">
+                    <button type="submit" class="btn btn--nomargin" name="commit" id="Subscribe">
+                      <span>{{ 'general.newsletter_form.submit' | t }}</span>
+                      <span class="btn_icon"> {% include 'btn_arrow' %}</span>
+                    </button>
+                  </span>
+                </div>
+                {%- if form.errors contains 'email' -%}
+                  <span id="{{ formId }}-email-error" class="input-error-message">
+                    <span class="visually-hidden">{{ 'general.accessibility.error' | t }} </span>
+                    {% include 'icon-error' %}
+                    <span>{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}.</span>
+                  </span>
+                {%- endif -%}
+              {% endform %}
+            </div>
+          </div>
+        </div>
+        {%- unless block.settings.image == blank -%}
+        <div class="lazyload newsletter_bg" id="newsletter-{{ block.id }}" {%- if block.settings.image -%} {% unless block.settings.image.alt == blank %} role="img" aria-label="{{ block.settings.image.alt | escape }}" data-alt="{{ block.settings.image.alt | escape }}" {% endunless %} data-bg="{{ block.settings.image | img_url: '1500x' }}" data-bgset="{% include 'bgset', image: block.settings.image %}" data-sizes="auto" data-parent-fit="cover" style="background-position: {{ block.settings.h_alignment }} {{ block.settings.v_alignment }}; background-size: cover;  background-image: url({{ block.settings.image | img_url: '1500x' }});" {%- endif -%}>    
+        </div>
+        {% if block.settings.show_overlay %}
+        <div class="overlay newsletter_bg" style="background-color: {{ block.settings.overlay_color }}; opacity: {{ block.settings.overlay_opacity | times: 0.01 }}"></div>
+        {% endif %}
+        {%- endunless -%}
+      </div>
+
+{% when "blog" %}
+      
+      {% paginate blogs[block.settings.select_blog].articles by block.settings.range %}
+      <div class="blog-section page-width mobile-h-padding">
+        <div class="row product-slider-header {{ block.settings.alignment_head_m }}-xs {{ block.settings.alignment_head }}-md">
+            <div class="col-xs-12">
+                {%- if block.settings.subtitle != blank -%}
+                    <h4 class="h4 subheading">{{ block.settings.subtitle | escape }}</h4>
+                {%- endif -%}
+                {%- if block.settings.title != blank -%}
+                    <h2 class="heading">{{ block.settings.title | escape }}</h2>
+                {%- endif -%}
+            </div>
+        </div>
+        <div class="row">
+          {% for article in blogs[block.settings.select_blog].articles %}
+            {% include 'blog-grid', article: article, bg: block.settings.background_color, blog_show_author: block.settings.blog_show_author, blog_show_date: block.settings.blog_show_date, excerpt: block.settings.excerpt %}
+          {% endfor %}
+        </div>
+      </div>
+      {% endpaginate %}
+
+
+{% endcase %}
+{%- endfor -%}
+</div>
+{% schema %}
+{
+  "name": "About Page",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner",
+      "label": "Banner Image"
+    },
+    {
+      "type": "color",
+      "id": "overlay",
+      "label": "Overlay Color",
+      "default": "#000"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Overlay Opacity",
+      "unit": "%",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "default": 25
+    },
+    {
+      "type": "select",
+      "id": "text_v",
+      "label": "Desktop Text Position",
+      "options": [
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "middle"
+    },
+    {
+      "type": "select",
+      "id": "text_h",
+      "label": "Desktop Text Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "select",
+      "id": "text_v_m",
+      "label": "Mobile Text Position",
+      "options": [
+        {
+          "value": "middle",
+          "label": "Middle"
+        },
+        {
+          "value": "bottom",
+          "label": "Bottom"
+        }
+      ],
+      "default": "bottom"
+    },
+    {
+      "type": "select",
+      "id": "text_h_m",
+      "label": "Mobile Text Alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    }
+  ],
+  "blocks": [
+        {
+            "type": "content", 
+            "name": "Content Block",
+            "settings": [
+                {
+                  "type": "header",
+                  "content": "Image Settings"
+                },
+                {
+                  "type": "radio",
+                  "id": "radio_page",
+                  "label": "Section Width",
+                  "default": "full",
+                  "options": [
+                      {
+                          "value": "full",
+                          "label": "Full Width"
+                      },
+                      {
+                        "value": "boxed",
+                        "label": "Boxed"
+                      }
+                  ]
+                },
+                {
+                  "type": "header",
+                  "content": "Colors"
+                },
+                {
+                  "type": "color",
+                  "id": "bg",
+                  "label": "Background",
+                  "default": "#fff"
+                },
+                {
+                  "type": "select",
+                  "id": "select_img",
+                  "label": "Column Width",
+                  "options": [
+                    {
+                      "value": "5",
+                      "label": "Five Columns"
+                    },
+                    {
+                      "value": "6",
+                      "label": "Six Columns"
+                    },
+                    {
+                      "value": "7",
+                      "label": "Seven Columns"
+                    }
+                  ],
+                  "default": "7"
+                },
+                {
+                  "type": "image_picker",
+                  "id": "image",
+                  "label": "Section Image"
+                },
+                {
+                    "type": "radio",
+                    "id": "radio",
+                    "label": "Image Alignment",
+                    "default": "left",
+                    "options": [
+                        {
+                            "value": "left",
+                            "label": "Left Align"
+                        },
+                        {
+                          "value": "right",
+                          "label": "Right Align"
+                        }
+                    ]
+                },
+                {
+                  "type": "header",
+                  "content": "Text Settings"
+                },
+                {
+                  "type": "select",
+                  "id": "select_text",
+                  "label": "Column Width",
+                  "options": [
+                    {
+                      "value": "5",
+                      "label": "Five Columns"
+                    },
+                    {
+                      "value": "6",
+                      "label": "Six Columns"
+                    },
+                    {
+                      "value": "7",
+                      "label": "Seven Columns"
+                    }
+                  ],
+                  "default": "5"
+                },
+                {
+                  "type": "text",
+                  "id": "subtitle",
+                  "label": "Subheading",
+                  "default": "Subheading Text"
+                },
+                {
+                  "type": "text",
+                  "id": "heading",
+                  "label": "Heading",
+                  "default": "Heading Text"
+                },
+                {
+                  "type": "richtext",
+                  "id": "text",
+                  "label": "Text",
+                  "default": "<p>Use overlay text to give your customers insight into your brand. Select imagery and text that relates to your style and story.</p>"
+                },
+                {
+                  "type": "text",
+                  "id": "button_label",
+                  "label": "Button label"
+                },
+                {
+                  "type": "url",
+                  "id": "button_link",
+                  "label": "Button link"
+                } 
+            ]
+        },
+        {
+          "type": "divider", 
+          "name": "Divider",
+          "settings": [
+                {
+                "type": "header",
+                "content": "Desktop"
+                },
+                {
+                    "type": "range",
+                    "id": "spacing",
+                    "label": "Section Spacing",
+                    "unit": "px",
+                    "min": 0,
+                    "max": 300,
+                    "step": 5,
+                    "default": 100
+                },
+                {
+                    "type": "header",
+                    "content": "Tab"
+                },
+                {
+                    "type": "range",
+                    "id": "spacing_t",
+                    "label": "Section Spacing",
+                    "unit": "px",
+                    "min": 0,
+                    "max": 300,
+                    "step": 5,
+                    "default": 100
+                },
+                {
+                    "type": "header",
+                    "content": "Mobile"
+                },
+                {
+                    "type": "range",
+                    "id": "spacing_m",
+                    "label": "Section Spacing",
+                    "unit": "px",
+                    "min": 0,
+                    "max": 300,
+                    "step": 5,
+                    "default": 100
+                }
+          ]
+        },
+        {
+          "type": "brandinfo", 
+          "name": "Brand Info",
+          "settings": [
+                  {
+                    "type": "header",
+                    "content": "Padding"
+                },
+                {
+                    "type": "radio",
+                    "id": "padding",
+                    "label": "Padding Size",
+                    "default": "medium",
+                    "options": [
+                        {
+                            "value": "medium",
+                            "label": "Medium"
+                        },
+                        {
+                            "value": "large",
+                            "label": "Large"
+                        }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Image"
+                },
+                {
+                    "type": "image_picker",
+                    "id": "image_bg",
+                    "label": "background Image"
+                },
+                {
+                  "type": "header",
+                  "content": "Color Settings"
+                },
+                {
+                    "type": "color",
+                    "id": "color_bg",
+                    "label": "Background Color",
+                    "default": "#0C4938"
+                },
+                {
+                    "type": "color",
+                    "id": "color_sub",
+                    "label": "Subtitle Color",
+                    "default": "#fff"
+                },
+                {
+                    "type": "color",
+                    "id": "color_title",
+                    "label": "Title Color",
+                    "default": "#fff"
+                },
+                {
+                    "type": "header",
+                    "content": "Text Settings"
+                },
+                {
+                    "type": "select",
+                    "id": "text_algin",
+                    "label": "Text Alignment",
+                    "options": [
+                      {
+                        "value": "left",
+                        "label": "Left"
+                      },
+                      {
+                        "value": "center",
+                        "label": "Middle"
+                      },
+                      {
+                        "value": "right",
+                        "label": "Right"
+                      }
+                    ],
+                    "default": "center"
+                },
+                {
+                    "type": "text",
+                    "id": "subtitle",
+                    "label": "Subheading",
+                    "default": "Subheading Text"
+                },
+                {
+                    "type": "textarea",
+                    "id": "title",
+                    "label": "Info Text",
+                    "default": "Info Text"
+                }
+          ]
+        },
+        {
+          "type": "instagram", 
+          "name": "Instagram",
+          "settings": [
+                {
+                    "type": "header",
+                    "content": "Instagram Settings"
+                },
+                {
+                    "type": "text",
+                    "id": "handle_insta",
+                    "label": "Insagram handle",
+                    "default": "@ferns.care",
+                    "info": "Add the Instagram handle or hashtag"
+                },
+                {
+                    "type": "header",
+                    "content": "Text"
+                },
+                {
+                    "type": "text",
+                    "id": "subheading",
+                    "label": "Section Subheading",
+                    "default": "Instagram"
+                },
+                {
+                    "type": "text",
+                    "id": "heading",
+                    "label": "Section Heading",
+                    "default": "Heading"
+                },
+                {
+                    "type": "url",
+                    "id": "insta_link",
+                    "label": "Link to Instagram page"
+                }
+          ]
+        },
+        {
+          "type": "testimonial", 
+          "name": "Testimonial",
+          "settings": [
+                {
+                  "type": "color",
+                  "id": "back",
+                  "label": "Background Color",
+                  "default": "#fff"
+                },
+                {
+                  "type": "textarea",
+                  "id": "quote",
+                  "label": {
+                    "da": "Tekst",
+                    "de": "Text",
+                    "en": "Text",
+                    "es": "Texto",
+                    "fi": "Teksti",
+                    "fr": "Texte",
+                    "hi": "टेक्स्ट",
+                    "it": "Testo",
+                    "ja": "テキスト",
+                    "ko": "텍스트",
+                    "nb": "Tekst",
+                    "nl": "Tekst",
+                    "pt-BR": "Texto",
+                    "pt-PT": "Texto",
+                    "sv": "Text",
+                    "th": "ข้อความ",
+                    "zh-CN": "文本",
+                    "zh-TW": "文字"
+                  },
+                  "default": "Add customer reviews and testimonials to showcase your store’s happy customers."
+                },
+                {
+                  "type": "text",
+                  "id": "author",
+                  "label": {
+                    "da": "Forfatter",
+                    "de": "Autor",
+                    "en": "Author",
+                    "es": "Autor",
+                    "fi": "Kirjoittaja",
+                    "fr": "Auteur",
+                    "hi": "लेखक",
+                    "it": "Autore",
+                    "ja": "執筆者",
+                    "ko": "작성자",
+                    "nb": "Forfatter",
+                    "nl": "Auteur",
+                    "pt-BR": "Autoria",
+                    "pt-PT": "Autoria",
+                    "sv": "Upphovsman",
+                    "th": "ผู้เขียน",
+                    "zh-CN": "作者",
+                    "zh-TW": "作者"
+                  },
+                  "default": {
+                    "da": "Forfatterens navn",
+                    "de": "Name des Autors",
+                    "en": "Author's name",
+                    "es": "Nombre del autor",
+                    "fi": "Kirjoittajan nimi",
+                    "fr": "Nom de l'auteur",
+                    "hi": "लेखक का नाम",
+                    "it": "Nome dell'autore",
+                    "ja": "筆者の名前",
+                    "ko": "작성자 이름",
+                    "nb": "Forfatterens navn",
+                    "nl": "Naam auteur",
+                    "pt-BR": "Nome do autor",
+                    "pt-PT": "Nome do autor",
+                    "sv": "Författarens namn",
+                    "th": "ชื่อผู้เขียน",
+                    "zh-CN": "作者姓名",
+                    "zh-TW": "作者名稱"
+                  }
+                },
+                {
+                  "type": "textarea",
+                  "id": "member",
+                  "label": "Member since",
+                  "default": "Member since"
+                }
+          ]
+        },
+        {
+          "type": "image_with_text", 
+          "name": "Image With Text Overlay",
+          "settings": [
+                {
+                  "type": "header",
+                  "content": "Desktop"
+                },
+                {
+                  "type": "select",
+                  "id": "v_alignment",
+                  "label": "Image alignment",
+                  "default": "center",
+                  "options": [
+                    {
+                      "value": "top",
+                      "label": "Top"
+                    },
+                    {
+                      "value": "center",
+                      "label": "Middle"
+                    },
+                    {
+                      "value": "bottom",
+                      "label": "Bottom"
+                    }
+                  ]
+                },
+                {
+                  "type": "select",
+                  "id": "h_alignment",
+                  "label": "Horizontal Image alignment",
+                  "default": "center",
+                  "options": [
+                    {
+                      "value": "left",
+                      "label": "Left"
+                    },
+                    {
+                      "value": "center",
+                      "label": "Middle"
+                    },
+                    {
+                      "value": "right",
+                      "label": "Right"
+                    }
+                  ]
+                },
+                {
+                  "type": "image_picker",
+                  "id": "image",
+                  "label": "Image"
+                },
+                {
+                  "type": "header",
+                  "content": "Mobile"
+                },
+                {
+                  "type": "select",
+                  "id": "v_alignment_mob",
+                  "label": "Image alignment",
+                  "default": "center",
+                  "options": [
+                    {
+                      "value": "top",
+                      "label": "Top"
+                    },
+                    {
+                      "value": "center",
+                      "label": "Middle"
+                    },
+                    {
+                      "value": "bottom",
+                      "label": "Bottom"
+                    }
+                  ]
+                },
+                {
+                  "type": "select",
+                  "id": "h_alignment_mob",
+                  "label": "Horizontal Image alignment",
+                  "default": "center",
+                  "options": [
+                    {
+                      "value": "left",
+                      "label": "Left"
+                    },
+                    {
+                      "value": "center",
+                      "label": "Middle"
+                    },
+                    {
+                      "value": "right",
+                      "label": "Right"
+                    }
+                  ]
+                },
+                {
+                  "type": "image_picker",
+                  "id": "image_mob",
+                  "label": "Image"
+                },
+                {
+                  "type": "header",
+                  "content": "Text Settings"
+                },
+                {
+                  "type": "header",
+                  "content": "Desktop"
+                },
+                {
+                  "type": "select",
+                  "id": "text_h",
+                  "label": "Desktop Text Alignment",
+                  "options": [
+                    {
+                      "value": "left",
+                      "label": "Left"
+                    },
+                    {
+                      "value": "center",
+                      "label": "Center"
+                    },
+                    {
+                      "value": "right",
+                      "label": "Right"
+                    }
+                  ],
+                  "default": "left"
+                },
+                {
+                  "type": "header",
+                  "content": "Mobile"
+                },
+                {
+                  "type": "select",
+                  "id": "text_h_m",
+                  "label": "Mobile Text Alignment",
+                  "options": [
+                    {
+                      "value": "left",
+                      "label": "Left"
+                    },
+                    {
+                      "value": "center",
+                      "label": "Center"
+                    },
+                    {
+                      "value": "right",
+                      "label": "Right"
+                    }
+                  ],
+                  "default": "left"
+                },
+                {
+                  "type": "header",
+                  "content": "Text"
+                },
+                {
+                  "type": "text",
+                  "id": "subtitle",
+                  "label": "Subheading",
+                  "default": "Subheading Text"
+                },
+                {
+                  "type": "textarea",
+                  "id": "title",
+                  "label": "Heading",
+                  "default": "Heading Text"
+                },
+                {
+                  "type": "richtext",
+                  "id": "text",
+                  "label": "Text",
+                  "default": "<p>Use overlay text to give your customers insight into your brand. Select imagery and text that relates to your style and story.</p>"
+                },
+                {
+                  "type": "text",
+                  "id": "button_label",
+                  "label": "Button label"
+                },
+                {
+                  "type": "url",
+                  "id": "button_link",
+                  "label": "Button link"
+                }
+          ]
+        },
+        {
+          "type": "newsletter", 
+          "name": "Newsletter",
+          "settings": [
+              {
+                "type": "header",
+                "content": "layout"
+              },
+              {
+                "type": "radio",
+                "id": "layout_radio",
+                "label": "layout style",
+                "default": "full",
+                "info": "Select layout type bellow",
+                "options": [
+                  {
+                    "value": "boxed",
+                    "label": "Boxed"
+                  },
+                  {
+                    "value": "full",
+                    "label": "Full"
+                  }
+                ]
+              },
+              {
+                "type": "header",
+                "content": "Background"
+              },
+              {
+                "type": "image_picker",
+                "id": "image",
+                "label": "Select BG Image"
+              },
+              {
+                "type": "select",
+                "id": "v_alignment",
+                "label": "Image alignment",
+                "default": "center",
+                "options": [
+                  {
+                    "value": "top",
+                    "label": "Top"
+                  },
+                  {
+                    "value": "center",
+                    "label": "Middle"
+                  },
+                  {
+                    "value": "bottom",
+                    "label": "Bottom"
+                  }
+                ]
+              },
+              {
+                "type": "select",
+                "id": "h_alignment",
+                "label": "Horizontal Image alignment",
+                "default": "center",
+                "options": [
+                  {
+                    "value": "left",
+                    "label": "Left"
+                  },
+                  {
+                    "value": "center",
+                    "label": "Middle"
+                  },
+                  {
+                    "value": "right",
+                    "label": "Right"
+                  }
+                ]
+              },
+              {
+                "type": "color",
+                "id": "bg_color",
+                "label": "Select Color",
+                "default": "#fff",
+                "info": "Select color if no background image"
+              },
+              {
+                "type": "header",
+                "content": "Overlay"
+              },
+              {
+                "type": "checkbox",
+                "id": "show_overlay",
+                "label": "Show Overlay on BG",
+                "default": true,
+                "info": "Select if want to show overlay over BG"
+              },
+              {
+                "type": "range",
+                "id": "overlay_opacity",
+                "label": "Change opacity",
+                "unit": "%",
+                "min": 1,
+                "max": 100,
+                "step": 1,
+                "default": 50
+              },
+              {
+                "type": "color",
+                "id": "overlay_color",
+                "label": "Select Color",
+                "default": "#fff",
+                "info": "Select overlay color"
+              },
+              {
+                "type": "header",
+                "content": "Text"
+              },
+              {
+                "type": "color",
+                "id": "title_color",
+                "label": "Title Color",
+                "default": "#222"
+              },
+              {
+                "type": "color",
+                "id": "subheading_color",
+                "label": "Subheading Color",
+                "default": "#222"
+              },
+              {
+                "type": "color",
+                "id": "input_color",
+                "label": "Input Color",
+                "default": "#222"
+              },
+              {
+                "type": "text",
+                "id": "section_title",
+                "label": {
+                  "da": "Overskrift",
+                  "de": "Titel",
+                  "en": "Heading",
+                  "es": "Título",
+                  "fi": "Otsake",
+                  "fr": "En-tête",
+                  "hi": "शीर्षक",
+                  "it": "Heading",
+                  "ja": "見出し",
+                  "ko": "제목",
+                  "nb": "Overskrift",
+                  "nl": "Kop",
+                  "pt-BR": "Título",
+                  "pt-PT": "Título",
+                  "sv": "Rubrik",
+                  "th": "ส่วนหัว",
+                  "zh-CN": "标题",
+                  "zh-TW": "標題"
+                },
+                "default": {
+                  "da": "Tilmeld dig vores nyhedsbrev",
+                  "de": "Unseren Newsletter abonnieren",
+                  "en": "Subscribe to our newsletter",
+                  "es": "Suscríbete a nuestro boletín de noticias",
+                  "fi": "Tilaa uutiskirjeemme",
+                  "fr": "S'inscrire à la newsletter",
+                  "hi": "हमारे न्यूज़लेटर की सदस्यता लें",
+                  "it": "Iscriviti alla nostra newsletter",
+                  "ja": "ストアからのお知らせを受け取る",
+                  "ko": "뉴스 레터 구독",
+                  "nb": "Abonner på nyhetsbrevet vårt",
+                  "nl": "Abonneren op onze nieuwsbrief",
+                  "pt-BR": "Assine a nossa newsletter",
+                  "pt-PT": "Subscreva a nossa newsletter",
+                  "sv": "Prenumerera på vårt nyhetsbrev",
+                  "th": "สมัครรับจดหมายข่าวของเรา",
+                  "zh-CN": "订阅我们的新闻通讯",
+                  "zh-TW": "訂閱我們的電子報"
+                }
+              },
+              {
+                "type": "textarea", 
+                "id": "subheading",
+                "label": {
+                  "da": "Underoverskrift",
+                  "de": "Unter-Überschrift",
+                  "en": "Subheading",
+                  "es": "Subtítulo",
+                  "fi": "Alaotsikko",
+                  "fr": "Sous-titre",
+                  "hi": "उपशीर्षक",
+                  "it": "Sottotitolo",
+                  "ja": "小見出し",
+                  "ko": "소제목",
+                  "nb": "Underoverskrift",
+                  "nl": "Subkop",
+                  "pt-BR": "Subtítulo",
+                  "pt-PT": "Subtítulo",
+                  "sv": "Underrubrik",
+                  "th": "หัวเรื่องย่อย",
+                  "zh-CN": "副标题",
+                  "zh-TW": "子標題"
+                },
+                "default": "A short sentence describing what someone will receive by subscribing"
+              },
+              {
+                "type": "paragraph",
+                "content": {
+                  "da": "Alle kunder, der tilmelder sig, får oprettet en konto i Shopify. [Se kunder](/admin/customers?query=&accepts_marketing=1)",
+                  "de": "Für alle Kunden, die sich anmelden, wird in Shopify ein Konto erstellt. [Kunden ansehen](/admin/customers?query=&accepts_marketing=1)",
+                  "en": "Any customers who sign up will have an account created for them in Shopify. [View customers](/admin/customers?query=&accepts_marketing=1)",
+                  "es": "Todos los clientes que se registren tendrán una cuenta creada para ellos en Shopify. [Ver clientes](/admin/customers?query=&accepts_marketing=1)",
+                  "fi": "Tilaaville asiakkaille luodaan tili Shopify-palvelussa. [Näytä asiakkaat](/admin/customers?query=&accepts_marketing=1)",
+                  "fr": "Un compte sera créé dans Shopify pour les clients qui s'inscrivent. [Afficher les clients](/admin/customers?query=&accepts_marketing=1)",
+                  "hi": "साइन अप करने वाले किसी भी ग्राहक के पास Shopify में उनके लिए बनाया गया एक खाता होगा. [ग्राहकों की](/admin/customers?query=&accepts_marketing=1) देखें",
+                  "it": "Qualsiasi cliente che si iscrive avrà un account creato appositamente per lui su Shopify. [Visualizza clienti](/admin/customers?query=&accepts_marketing=1)",
+                  "ja": "サインアップしたお客様は、Shopifyでアカウントが作成されます。[お客様を表示する](/admin/customers?query=&accepts_marketing=1)",
+                  "ko": "가입한 고객은 Shopify에서 생성된 계정을 보유하게 됩니다. [고객 보기](/admin/customers?query=&accepts_marketing=1)",
+                  "nb": "Alle kunder som melder seg på, vil få opprettet en konto i Shopify. [Se kunder](/admin/customers?query=&accepts_marketing=1)",
+                  "nl": "Voor alle klanten die zich aanmelden, wordt een Shopify-account gemaakt. [Bekijk klanten](/admin/customers?query=&accepts_marketing=1)",
+                  "pt-BR": "Todos os clientes que se inscreverem terão uma conta criada para eles na Shopify. [Visualizar clientes](/admin/customers?query=&accepts_marketing=1)",
+                  "pt-PT": "Será criada uma conta na Shopify para todos os clientes que se registarem. [Ver clientes](/admin/customers?query=&accepts_marketing=1)",
+                  "sv": "Alla kunder som registrerar sig kommer att få ett konto skapat i Shopify. [Visa kunder](/admin/customers?query=&accepts_marketing=1)",
+                  "th": "ระบบจะสร้างบัญชีผู้ใช้ใน Shopify ให้แก่ลูกค้ารายที่ลงทะเบียนแล้ว [ดูลูกค้า](/admin/customers?query=&accepts_marketing=1)",
+                  "zh-CN": "任何注册用户都将在 Shopify 中拥有一个为他们创建的帐户。[查看客户](/admin/customers?query=&accepts_marketing=1)",
+                  "zh-TW": "顧客註冊後就可以擁有 Shopify 帳號。[查看顧客](/admin/customers?query=&accepts_marketing=1)"
+                }
+              }
+        ]
+        },
+        {
+          "type": "blog", 
+          "name": "Featured Blog",
+          "settings": [
+                {
+                    "type": "header",
+                    "content": "Alignment"
+                },
+                {
+                    "type": "header",
+                    "content": "Desktop"
+                },
+                {
+                    "type": "select",
+                    "id": "alignment_head",
+                    "label": "Heading & Button Alignment",
+                    "options": [
+                        {
+                            "value": "start",
+                            "label": "Left"
+                        },
+                        {
+                            "value": "center",
+                            "label": "Center"
+                        },
+                        {
+                            "value": "end",
+                            "label": "Right"
+                        }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Mobile"
+                },
+                {
+                    "type": "select",
+                    "id": "alignment_head_m",
+                    "label": "Heading & Button Alignment",
+                    "options": [
+                        {
+                            "value": "start",
+                            "label": "Left"
+                        },
+                        {
+                            "value": "center",
+                            "label": "Center"
+                        },
+                        {
+                            "value": "end",
+                            "label": "Right"
+                        }
+                    ]
+                },
+                {
+                    "type": "header",
+                    "content": "Colors"
+                },
+                {
+                    "type": "color",
+                    "id": "background_color",
+                    "label": "Article Background Color",
+                    "default": "#fff"
+                },
+                {
+                    "type": "header",
+                    "content": "Heading"
+                },
+                {
+                    "type": "text",
+                    "id": "subtitle",
+                    "label": "Subheading",
+                    "default": "Subheading Text"
+                },
+                {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Heading",
+                    "default": "Heading Text"
+                },
+                
+                {
+                    "type": "header",
+                    "content": "Blog"
+                },
+                {
+                  "type": "blog",
+                  "id": "select_blog",
+                  "label": "Select Blog"
+                },
+                {
+                    "type": "range",
+                    "id": "range",
+                    "label": "Number of Posts",
+                    "min": 3,
+                    "max": 12,
+                    "step": 3,
+                    "default": 3
+                },
+                {
+                  "type": "checkbox",
+                  "id": "blog_show_author",
+                  "label": "Show author",
+                  "default": true
+                },
+                {
+                  "type": "checkbox",
+                  "id": "blog_show_date",
+                  "label": "Show date",
+                  "default": true
+                },
+                {
+                  "type": "checkbox",
+                  "id": "excerpt",
+                  "label": "Show excerpt",
+                  "default": true
+                }
+          ]
+        }
+    ]
+}
+{% endschema %}

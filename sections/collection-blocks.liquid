@@ -1,0 +1,131 @@
+<style>
+ .col-block-{{section.id}} .coll-block-h4 .btn_icon svg{fill:{{section.settings.btn_txt}};}
+</style>
+
+<div class="col-block-{{section.id}} collection-block-row {% if section.settings.padding_top == true %}no_padding_top {% endif %}{% if section.settings.padding_bottom == true %}no_padding_bottom{% endif %} mobile-h-padding" data-scroll data-scroll-offset="100">
+    <div class="page-width">
+        <div class="row">
+            {% for block in section.blocks %}
+            {%- assign img_url = block.settings.coll_image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+            <div id="collection-block--{{ block.id }}" class="{% if section.settings.column == "2" %}col-sm-6 col-md-6{% elsif section.settings.column == "3" %}col-sm-12 col-md-4{% endif %} col-xs-12 collection-block text-center" {{ block.shopify_attributes }}>
+                <div class="collection-block-inner lazy-container">
+                <a href="{{ block.settings.collection_url }}">
+                <div data-scroll data-scroll-speed="-0.4" data-scroll-target="#collection-block--{{ block.id }}">
+                {% if block.settings.coll_image != blank %}
+                 <img
+                    class="lazyload lazy"  
+                    src="{{ block.settings.coll_image | img_url: '50x' }}"   
+                    data-srcset="{{ block.settings.coll_image | img_url: '720x' }}720w, {{ block.settings.coll_image | img_url: '900x' }} 900w, {{ block.settings.coll_image | img_url: '1080x' }} 1080w, {{ block.settings.coll_image | img_url: '1296x' }}1296w"
+                    data-aspectratio="{{ block.settings.coll_image.aspect_ratio }}"
+                    data-sizes="auto"
+                    data-parent-fit="cover" 
+                    alt="{{ block.settings.coll_image.alt | escape }}"
+                />
+                  {% else %}
+                  
+                  <img
+                    class="lazyload lazy"  
+                    src="{{ 'cc_ph.png' | asset_url }}"   
+                    data-aspectratio="{{ block.settings.coll_image.aspect_ratio }}"
+                    data-sizes="auto"
+                    data-parent-fit="cover" 
+                    alt="{{ block.settings.coll_image.alt | escape }}"
+                />
+                  {% endif %}
+                </div>
+                <h2 class="coll-block-h4 h4" style="color:{{section.settings.btn_txt}};background:{{section.settings.btn_bg}};">{{ block.settings.block-text | escape }} <span class="btn_icon"> {% include 'btn_arrow' %}</span></h2>
+                </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>   
+
+{% schema %}
+{
+    "name": "Featured Collections",
+    "class": "collection-blocks",
+    "tag": "section",
+    "max_blocks": 3,
+    "settings": [
+        {
+            "type": "color",
+            "id": "btn_bg",
+            "label": "Button Background",
+            "default": "#000000"
+        },
+        {
+            "type": "color",
+            "id": "btn_txt",
+            "label": "Button text color",
+            "default": "#ecb0a8"
+        },
+        {
+            "type": "header",
+            "content": "Padding"
+        },
+        {
+            "type": "checkbox",
+            "id": "padding_top",
+            "label": "No padding top",
+            "default": false
+        },
+        {
+            "type": "checkbox",
+            "id": "padding_bottom",
+            "label": "No padding bottom",
+            "default": false
+        },
+        {
+            "type": "select",
+            "id": "column",
+            "label": "Total blocks",
+            "options": [
+                {
+                    "value": "2",
+                    "label": "Two blocks"
+                },
+                {
+                    "value": "3",
+                    "label": "Three blocks"
+                }
+            ]
+        }
+    ],
+    "blocks": [
+      {
+        "type": "image",
+        "name": "Collection block",
+        "settings": [
+            {
+                "type": "header",
+                "content": "Collection image"
+            },
+            {
+                "type": "image_picker",
+                "id": "coll_image",
+                "label": "Icon upload"
+            },
+            {
+                "type": "url",
+                "id": "collection_url",
+                "label": "Link"
+            },
+            {
+                "type": "text",
+                "id": "block-text",
+                "label": "Icon text",
+                "default": "Lorum Ipsum"
+            }
+        ]
+      }
+    ],
+    "presets": [
+        {
+            "name": "Featured Collection",
+            "category": "Collection"
+        }
+    ]
+}
+{% endschema %}

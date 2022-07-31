@@ -1,0 +1,53 @@
+
+
+<div class="page-width page-with-header page mobile-h-padding">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="section-header text-center">
+        <h1>{{ page.title }}</h1>
+      </div>
+
+      <div class="row">
+        {%- for block in section.blocks -%}
+        <div class="col-sm-6 col-lg-4" style="padding-bottom: 12px;">
+          <img src={{ block.settings.imagere | img_url: '1024x'}}/>
+        </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Before After",
+    "settings": [
+   {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Header Image"
+    }
+  ],
+"blocks": [
+        {
+            "type": "text",
+            "name": "Before After Block",
+            "settings": [
+               
+                {
+                 "type": "image_picker",
+                 "id": "imagere",
+                "label": "Before After Image"
+                 }
+            ]
+        }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

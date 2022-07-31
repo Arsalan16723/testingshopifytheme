@@ -1,0 +1,12 @@
+
+<style>
+#logoSvg {
+	width: {{ width }}px; 
+}
+</style>
+{% if section.settings.logo == blank %}
+<img src="{{'logo_ph.png' | asset_url }}"  style="max-width:{{width}}px;">
+{% else %}
+<img src="{{section.settings.logo | img_url: '4000x'}}" style="max-width:{{section.settings.logo_max_width}}px;">
+{% endif %}
+

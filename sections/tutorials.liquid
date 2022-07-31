@@ -1,0 +1,166 @@
+<div class="page-width page-with-header page mobile-h-padding">
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="section-header text-center">
+        <h1>{{ page.title }}</h1>
+      </div>
+
+      <div class="row">
+        {%- for block in section.blocks -%}
+        <div class="col-sm-6 col-lg-4" style="padding-bottom: 12px;">
+          <a href="#" onclick="lightbox_open();"><img src={{ block.settings.imagerer | img_url: '1024x'}}/></a>
+        </div>
+        
+        <div id="light">
+  <a class="boxclose" id="boxclose" onclick="lightbox_close();"></a>
+  <video id="VisaChipCardVideo" width="600" controls>
+      <source src="{{ block.settings.video_url}}" type="video/mp4">
+      <!--Browser does not support <video> tag -->
+    </video>
+</div>
+        {%- endfor -%}
+        
+        
+
+
+<div id="fade" onClick="lightbox_close();"></div>
+
+<div>
+ 
+</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+window.document.onkeydown = function (e) {
+  if (!e) {
+    e = event;
+  }
+  if (e.keyCode == 27) {
+    lightbox_close();
+  }
+};
+
+function lightbox_open() {
+  var lightBoxVideo = document.getElementById("VisaChipCardVideo");
+  window.scrollTo(0, 0);
+  document.getElementById("light").style.display = "block";
+  document.getElementById("fade").style.display = "block";
+  lightBoxVideo.load();
+  lightBoxVideo.play();
+  
+}
+
+function lightbox_close() {
+  var lightBoxVideo = document.getElementById("VisaChipCardVideo");
+  document.getElementById("light").style.display = "none";
+  document.getElementById("fade").style.display = "none";
+  lightBoxVideo.pause();
+}
+</script>
+
+{% schema %}
+  {
+    "name": "Tutorials",
+    "settings": [
+   {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Header Image"
+    }
+  ],
+"blocks": [
+        {
+            "type": "text",
+            "name": "Before After Block",
+            "settings": [
+               
+                {
+                 "type": "image_picker",
+                 "id": "imagerer",
+                "label": "Before After Image"
+                 },
+                 {
+                 "type": "text",
+                 "id": "video_url",
+                 "default": "Enter Tutorial Video URL",
+                 "label": "Enter Tutorial Video URL"
+                 }
+            ]
+        }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+
+#fade {
+  display: none;
+  position: fixed;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  z-index: 1001;
+  -moz-opacity: 0.8;
+  opacity: .80;
+  filter: alpha(opacity=80);
+}
+
+#light {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  max-width: 600px;
+  max-height: 360px;
+  margin-left: -300px;
+  margin-top: -180px;
+  border: 2px solid #FFF;
+  background: #FFF;
+  z-index: 1002;
+  overflow: visible;
+}
+
+#boxclose {
+  float: right;
+  cursor: pointer;
+  color: #fff;
+  border: 1px solid #AEAEAE;
+  border-radius: 3px;
+  background: #222222;
+  font-size: 31px;
+  font-weight: bold;
+  display: inline-block;
+  line-height: 0px;
+  padding: 11px 3px;
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  z-index: 1002;
+  opacity: 0.9;
+}
+
+.boxclose:before {
+  content: "×";
+}
+
+#fade:hover ~ #boxclose {
+  display:none;
+}
+
+.test:hover ~ .test2 {
+  display: none;
+}
+{% endstylesheet %}
+
+{% javascript %}
+
+
+
+{% endjavascript %}

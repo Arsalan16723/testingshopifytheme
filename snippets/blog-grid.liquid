@@ -1,0 +1,82 @@
+<div class="col-xs-12 col-sm-4">
+    <a href="{{ article.url }}" class="article__link">
+      {% if article.image %}
+        {% capture img_id %}ArticleImage-{{ article.image.id }}{% endcapture %}
+        {% capture img_wrapper_id %}ArticleImageWrapper-{{ article.image.id }}{% endcapture %}
+        {%- assign img_url = article.image | img_url: '1x1' | replace: '_1x1.', '_{width}x.' -%}
+
+        {% include 'image-style', image: article.image, height: 345, wrapper_id: img_wrapper_id, img_id: img_id %}
+        <div id="{{ img_wrapper_id }}" class="">
+          <div class="article__grid-image-container" style="padding-top:{{ 1 | divided_by: article.image.aspect_ratio | times: 100 }}%;">
+            <img id="{{ img_id }}"
+                class="article__grid-image lazyload"
+                src="{{ article.image | img_url: '300x300' }}"
+                data-src="{{ img_url }}"
+                data-widths="[180, 360, 540, 720, 900, 1080]"
+                data-aspectratio="{{ article.image.aspect_ratio }}"
+                data-sizes="auto"
+                alt="{{ article.image.alt }}">
+          </div>
+        </div>
+        <noscript>
+          <div class="article__grid-image-wrapper">
+            {{ article | img_url: '345x345', scale: 2 | img_tag: article.title, 'article__grid-image' }}
+          </div>
+        </noscript>
+      {% endif %}
+    </a>
+
+    <div class="article__grid-meta{% if article.image %} article__grid-meta--has-image{% endif %}" style="background-color: {{ bg }}">
+        {% if article.tags.size > 0 %}
+        <div class="article__tags rte">
+          <ul class="list--inline" aria-label="{{ 'blogs.article.tags' | t }}">
+            {% for tag in article.tags %}
+              <li>
+                <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="subheading">{{ tag }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+        <h3 class="article__title{% if article.image %} article__title--has-image{% endif %}">
+            <a href="{{ article.url }}">{{ article.title | escape }}</a>
+        </h3>
+      {% if blog_show_author %}
+        <span class="article__author">{{ 'blogs.article.by_author' | t: author: article.author }}</span>
+      {% endif %}
+
+      {% if blog_show_date %}
+        <span class="article__date">
+          {{ article.published_at | time_tag: format: 'date' }}
+        </span>
+      {% endif %}
+
+      {% if excerpt %}
+      <div class="rte article__grid-excerpt">
+        {% if article.excerpt.size > 0 %}
+          {{ article.excerpt }}
+        {% else %}
+          {{ article.content | strip_html | truncate: 150 }}
+        {% endif %}
+      </div>
+      {% endif %}
+
+      
+
+      <ul class="list--inline article__meta-buttons">
+        <li>
+          <a href="{{ article.url }}" class="btn" aria-label="{{ 'blogs.article.read_more_title' | t: title: article.title }}">
+            {{ 'blogs.article.read_more' | t }}
+          </a>
+        </li>
+
+        {% if blog.comments_enabled? and article.comments_count > 0 %}
+          <li>
+            <a href="{{ article.url }}#comments" class="article__comment-count btn btn--tertiary btn--small">
+              {{ 'blogs.comments.comments_with_count' | t: count: article.comments_count }}
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+    </div>
+</div>

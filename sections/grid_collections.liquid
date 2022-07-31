@@ -1,0 +1,240 @@
+<style>
+  .cg_col_md:hover, .cg_col_lg:hover, .cg_col .cgc_img:hover{
+    border-radius: 0.375rem;
+  }
+  #imgGallery-{{section.id}} .cgc_img{
+  
+  }
+  #imgGallery-{{section.id}} .cgc_img .cgc_btn a{
+    background:{{section.settings.bg}};color:{{section.settings.btn_txt}};font-weight:500;
+  }
+  #imgGallery-{{section.id}} .cgc_img h2{
+    color:{{section.settings.color}};
+  }
+</style>
+<section id="imgGallery-{{section.id}}" class="custom_gallery">
+ <div class="cg_container">
+  <div class="cg_inner">
+    <div class="cg_col cg_col_lg">
+      <div class="cgc_img">
+        {% if section.settings.img_one != blank %}
+        <img onclick="location.href='{{section.settings.img_one_link}}'" src="{{section.settings.img_one | img_url: 'original' }}" alt="image" class="desk">
+        {% else %}
+          <img src="{{'cc_ph1.jpg' | asset_url}}" class="desk">
+        {% endif %}
+        <img onclick="location.href='{{section.settings.img_one_link}}'" src="{{section.settings.img_one_mb | img_url: 'original' }}" alt="image" class="mob">
+        <div class="cgc_details">
+          <h2>{{section.settings.img_one_txt}}</h2>
+        </div>
+        <div class="cgc_btn">
+          <a href="{{section.settings.img_one_link}}">{{section.settings.img_one_label}}</a>
+        </div>
+      </div>
+    </div>
+    <div class="cg_col cg_col_md">
+      <div class="cgc_img">
+       	{% if section.settings.img_two != blank %}
+        <img onclick="location.href='{{section.settings.img_two_link}}'" src="{{section.settings.img_two | img_url: 'original' }}" alt="image" class="desk">
+        {% else %}
+          <img src="{{'cc_ph2.jpg' | asset_url}}" class="desk">
+        {% endif %}
+        <img onclick="location.href='{{section.settings.img_two_link}}'" src="{{section.settings.img_two_mb | img_url: 'original' }}" alt="image" class="mob">
+        <div class="cgc_details">
+          <h2>{{section.settings.img_two_txt}}</h2>
+        </div>
+        <div class="cgc_btn">
+          <a href="{{section.settings.img_two_link}}">{{section.settings.img_two_label}}</a>
+        </div>
+      </div>
+    </div>
+    <div class="cg_col cg_col_sm">
+      <div class="cgc_img">
+        {% if section.settings.img_three != blank %}
+        <img onclick="location.href='{{section.settings.img_three_link}}'" src="{{section.settings.img_three | img_url: 'original' }}" alt="image" class="desk">
+        {% else %}
+          <img src="{{'cc_ph3.jpg' | asset_url}}" class="desk">
+        {% endif %}
+        <img onclick="location.href='{{section.settings.img_three_link}}'" src="{{section.settings.img_three_mb | img_url: 'original' }}" alt="image" class="mob">
+        <div class="cgc_details">
+          <h2>{{section.settings.img_three_txt}}</h2>
+        </div>
+        <div class="cgc_btn">
+          <a href="{{section.settings.img_three_link}}">{{section.settings.img_three_label}}</a>
+        </div>
+      </div>
+      <div class="cgc_img cgc_img_col_two_sm">
+        {% if section.settings.img_four != blank %}
+        <img onclick="location.href='{{section.settings.img_four_link}}'" src="{{section.settings.img_four | img_url: 'original' }}" alt="image" class="desk">
+        {% else %}
+          <img src="{{'cc_ph4.jpg' | asset_url}}" class="desk">
+        {% endif %}
+        <img onclick="location.href='{{section.settings.img_four_link}}'" src="{{section.settings.img_four_mb | img_url: 'original' }}" alt="image" class="mob">
+        <div class="cgc_details">
+          <h2>{{section.settings.img_four_txt}}</h2>
+        </div>
+        <div class="cgc_btn">
+          <a href="{{section.settings.img_four_link}}">{{section.settings.img_four_label}}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+</section>
+{% schema %}
+  {
+    "name": "Grid Collections Gallery",
+    "settings": [
+      {
+		"type": "header",
+		"content": "Colors"
+      },		
+      {
+		"type": "color",
+		"id": "color",
+		"label": "Title Color",
+		"default": "#ffffff"
+      },
+      {
+		"type": "color",
+		"id": "bg",
+		"label": "Button background Color",
+		"default": "#ffffff"
+      },
+      {
+		"type": "color",
+		"id": "btn_txt",
+		"label": "Button Text Color",
+		"default": "#000000"
+      },
+      {
+		"type": "header",
+		"content": "Image One and Details"
+      },
+      {
+		"type": "image_picker",
+		"id": "img_one",
+		"label": "Image One"
+      },
+      {
+		"type": "image_picker",
+		"id": "img_one_mb",
+		"label": "Image One Mobile"
+      },
+      {
+		"type": "text",
+		"id": "img_one_txt",
+		"label": "Image One Text"
+      },
+      {
+		"type": "text",
+		"id": "img_one_label",
+		"label": "Image One Button Text"
+      },
+      {
+		"type": "url",
+		"id": "img_one_link",
+		"label": "Image One Link"
+      },
+      {
+		"type": "header",
+		"content": "Image Two and Details"
+      },
+      {
+		"type": "image_picker",
+		"id": "img_two",
+		"label": "Image two"
+      },
+      {
+		"type": "image_picker",
+		"id": "img_two_mb",
+		"label": "Image Two Mobile"
+      },
+      {
+		"type": "text",
+		"id": "img_two_txt",
+		"label": "Image One Text"
+      },
+      {
+		"type": "text",
+		"id": "img_two_label",
+		"label": "Image two Button Text"
+      },
+      {
+		"type": "url",
+		"id": "img_two_link",
+		"label": "Image two Link"
+      },
+      {
+		"type": "header",
+		"content": "Image three and Details"
+      },
+      {
+		"type": "image_picker",
+		"id": "img_three",
+		"label": "Image three"
+      },
+      {
+		"type": "image_picker",
+		"id": "img_three_mb",
+		"label": "Image three Mobile"
+      },
+      {
+		"type": "text",
+		"id": "img_three_txt",
+		"label": "Image three Text"
+      },
+      {
+		"type": "text",
+		"id": "img_three_label",
+		"label": "Image three Button Text"
+      },
+      {
+		"type": "url",
+		"id": "img_three_link",
+		"label": "Image three Link"
+      },
+            {
+		"type": "header",
+		"content": "Image four and Details"
+      },
+      {
+		"type": "image_picker",
+		"id": "img_four",
+		"label": "Image One"
+      },
+      {
+		"type": "image_picker",
+		"id": "img_four_mb",
+		"label": "Image four Mobile"
+      },
+      {
+		"type": "text",
+		"id": "img_four_txt",
+		"label": "Image One Text"
+      },
+      {
+		"type": "text",
+		"id": "img_four_label",
+		"label": "Image One Button Text"
+      },
+      {
+		"type": "url",
+		"id": "img_four_link",
+		"label": "Image four Link"
+      }
+	  
+	],
+	"presets":[
+		{
+			"name": "Grid Collections Gallery",
+			"category": "Image"
+		}
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

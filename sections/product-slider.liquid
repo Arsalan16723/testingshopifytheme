@@ -1,0 +1,141 @@
+<div class="product-slider-outer content-with-padding {% if section.settings.layout_select == 'boxed' %}page-width{% endif %} mobile-h-padding" >
+    <div class="row middle-sm {{ section.settings.alignment_head }}-xs start-sm">
+    <div class="product-slider-header col-sm-4{% if section.settings.layout_select == 'full' %} col-md-offset-1{% endif %} col-md-2 col-xs-12">
+            {%- if section.settings.subtitle != blank -%}
+                <h4 class="h4 subheading reveal-up-child">{{ section.settings.subtitle | escape }}</h4>
+            {%- endif -%}
+            {%- if section.settings.title != blank -%}
+                <h1 class="h1 heading reveal-up-child">{{ section.settings.title | escape }}</h1>
+            {%- endif -%}
+            {% if section.settings.text %}{{ section.settings.text }}{% endif %}
+            {%- if section.settings.link != blank -%}
+            <a href="{{ section.settings.link }}" class="btn small--hide" aria-label="{{ ariaLabel }}">
+                {{ section.settings.btn_label | escape }}
+            </a>
+            {%- endif -%}
+    </div>
+    <div class="product-slider-container col-md-offset-1 col-sm-8 col-md-{% if section.settings.layout_select == 'full' %}6{% else %}8{% endif %} col-xs-12">
+        <div class="product-slider" slides-length="{% if section.settings.layout_select == 'boxed' %}2{% else %}3{% endif %}">
+            <!-- Additional required wrapper -->
+            <div class="swiper-wrapper">
+                <!-- Slides -->
+                {% for product in collections[section.settings.collection].products %}
+                    <div id="slide-container-{{ product.id }}" class="swiper-slide animate">
+                        {% include 'product-card-grid', product: product, show_vendor: section.settings.show_vendor, , container: 'product-card' %}
+                    </div>
+                {% endfor %}
+                <div class="swiper-scrollbar"></div>
+            </div>
+        </div> 
+    </div>
+    <a href="{{ section.settings.link }}" class="btn medium-up--hide" aria-label="{{ ariaLabel }}">
+        {{ section.settings.btn_label | escape }}
+    </a>
+    
+    <div class="product-slider-backdrop {% if section.settings.layout_select == 'boxed' %}boxed{% endif %} col-sm-6 col-md-7" style="background-color: {{ section.settings.background }}"></div>
+</div>
+</div>
+
+{% schema %}
+  {
+    "name": "Product Slider",
+    "class": "product-slider-main",
+    "tag": "section",
+    "settings": [
+    {
+        "type": "header",
+        "content": "Layout"
+    },
+    {
+        "type": "radio",
+        "id": "layout_select",
+        "label": "Select Layout",
+        "default": "boxed",
+        "options": [
+            {
+                "value": "boxed",
+                "label": "Boxed"
+            },
+            {
+                "value": "full",
+                "label": "Full"
+            }
+        ]
+    },
+    {
+        "type": "header",
+        "content": "Mobile"
+    },
+    {
+        "type": "select",
+        "id": "alignment_head",
+        "label": "Heading & Button Alignment",
+        "options": [
+            {
+                "value": "start",
+                "label": "Left"
+            },
+            {
+                "value": "center",
+                "label": "Center"
+            },
+            {
+                "value": "end",
+                "label": "Right"
+            }
+        ]
+    },
+    {
+        "type": "header",
+        "content": "Section Colors"
+    },
+    {
+        "type": "color",
+        "id": "background",
+        "label": "Background Color",
+        "default": "#fff"
+    },
+    {
+        "type": "text",
+        "id": "subtitle",
+        "label": "Subheading",
+        "default": "Subheading Text"
+    },
+    {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Heading Text"
+    },
+    {
+        "type": "richtext",
+        "id": "text",
+        "label": "Text",
+        "default": "<p>Use overlay text to give your customers insight into your brand. Select imagery and text that relates to your style and story.</p>"
+    },
+    {
+        "type": "collection",
+        "id": "collection",
+        "label": "Product Collection",
+        "info": "Select Collection to be displayed"
+    },
+    {
+      "type": "text",
+      "id": "btn_label",
+      "label": "Button Label",
+      "default": "shop all products"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Button Link"
+    }
+    ],
+    "presets": [
+        {
+        "name": "Product Slider",
+        "category": "Collection"
+        }
+    ]
+  }
+{% endschema %}
